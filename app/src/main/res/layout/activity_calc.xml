@@ -52,6 +52,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_margin="5dp">
+        <LinearLayout style="@style/calc_row_btn">
+            <Button
+                android:id="@+id/calc_btn_mc"
+                style="@style/calc_btn_func"
+                android:text="MC"/>
+            <Button
+                android:id="@+id/calc_btn_mr"
+                style="@style/calc_btn_func"
+                android:text="MR"/>
+            <Button
+                android:id="@+id/calc_btn_m_plus"
+                style="@style/calc_btn_func"
+                android:text="M+"/>
+            <Button
+                android:id="@+id/calc_btn_m_minus"
+                style="@style/calc_btn_func"
+                android:text="M-"/>
+        </LinearLayout>
         <LinearLayout
             style="@style/calc_row_btn">>
             <Button
@@ -167,7 +185,7 @@
                 android:text="@string/calc_btn_dot"/>
             <Button
                 android:id="@+id/calc_btn_equals"
-                style="@style/calc_btn_func"
+                style="@style/calc_btn_equal"
                 android:text="@string/calc_btn_equal"/>
         </LinearLayout>
     </LinearLayout>
