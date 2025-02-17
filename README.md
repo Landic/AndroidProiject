@@ -1,3 +1,9 @@
+HW 14.02:
+
+![image](https://github.com/user-attachments/assets/aaa9b128-876c-4e32-8ed2-fc1e3463bf23)
+
+
+
 HW 13.02:
 
 ![image](https://github.com/user-attachments/assets/568c5e7f-d603-4277-8e3e-a68a4f880b0d)
