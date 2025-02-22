@@ -5,7 +5,6 @@
     <string name="main_btn_calc">Калькулятор</string>
 
 
-
     <string name="calc_tv_title">Калькулятор</string>
     <string name="calc_btn_0">0</string>
     <string name="calc_btn_1">1</string>
@@ -33,4 +32,11 @@
     <string name="calc_btn_pm">+/-</string>
     <string name="calc_inv_tpl">1 / (%s)</string>
     <string name="calc_err_div_zero">Ділення на 0</string>
+
+
+
+    <string name="game_tv_title">2048</string>
+    <string name="game_tv_hint">Join the numbers and get to the 2048 tile!</string>
+    <string name="game_btn_new">NEW</string>
+    <string name="game_btn_undo">UNDO</string>
 </resources>

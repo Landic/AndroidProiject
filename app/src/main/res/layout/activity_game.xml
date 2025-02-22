@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".GameActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/game_all_shape"
+            android:backgroundTint="@color/game_tv_title"
+            android:gravity="center"
+            android:text="@string/game_tv_title"
+            android:textColor="@color/white"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/game_tv_score"
+                style="@style/game_tv_score"
+                tools:text="SCORE\n512" />
+
+            <Button
+                android:id="@+id/game_btn_new"
+                style="@style/game_btn_new"
+                android:text="@string/game_btn_new" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/game_tv_best"
+                style="@style/game_tv_score"
+                tools:text="BEST\n512" />
+
+            <Button
+                android:id="@+id/game_btn_undo"
+                style="@style/game_btn_new"
+                android:text="@string/game_btn_undo" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/game_tv_hint"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/game_layout_field"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/game_all_shape"
+        android:backgroundTint="@color/game_field_bg"
+        android:padding="6dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+            <TextView
+                style="@style/game_tv_tile"
+                android:backgroundTint="@color/game_tile0_bg" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

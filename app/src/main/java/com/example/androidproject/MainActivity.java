@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         //});
         tv1 = findViewById(R.id.textView1);
         findViewById(R.id.button1).setOnClickListener(this::onButton1Click);
+        findViewById(R.id.button2).setOnClickListener(this::onButton2Click);
         tvCounter = findViewById(R.id.tvCounter);
         btnMinus = findViewById(R.id.btnMinus);
         btnPlus = findViewById(R.id.btnPlus);
@@ -61,5 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void onButton1Click(View view) {
         startActivity(new Intent(MainActivity.this, CalcActivity.class));
+    }
+    private void onButton2Click(View view) {
+        startActivity(new Intent(MainActivity.this, GameActivity.class));
     }
 }
