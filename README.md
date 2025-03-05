@@ -1,3 +1,15 @@
+HW 27.02-28.02:
+
+
+
+https://github.com/user-attachments/assets/612d8f75-20ca-4758-acbf-6c10b4b2ca21
+
+
+
+
+
+
+
 HW 21.02:
 
 ![image](https://github.com/user-attachments/assets/94d79acc-2081-444e-a16e-270eae272779)
