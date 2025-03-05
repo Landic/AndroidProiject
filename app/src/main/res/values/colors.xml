@@ -13,7 +13,8 @@
     <color name="calc_tv_exp_fg">#A5A5A5</color>
 
 
-
+    <color name="main_layout_bg">#2B00BCD4</color>
+    <color name="main_btn_bg">#3F51B5</color>
 
     <color name="game_tv_title">#EACA5E</color>
     <color name="game_tv_score">#3D3A33</color>
