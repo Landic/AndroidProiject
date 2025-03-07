@@ -1,8 +1,10 @@
 package com.example.androidproject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +22,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.w3c.dom.Text;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -26,16 +34,18 @@ import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
     private final Random random =  new Random();
+    private final String bestScoreFilename = "score.best";
     private TextView tvScore;
     private TextView tvBestScore;
     private Animation spawnAnimation;
     private Animation collapseAnimation;
     private Animation bestScoreAnimation;
-    private long score;
-    private long bestScore;
     private final int N =4;
     private final int[][] tiles = new int[N][N];
+    private long score;
+    private long bestScore;
     private final TextView[][] tvTiles = new TextView[N][N];
+    private SavedState savedState;
 
     @SuppressLint({"ClickableViewAccessibility", "DiscouragedApi"})
     @Override
@@ -68,6 +78,8 @@ public class GameActivity extends AppCompatActivity {
         }
         tvScore =findViewById(R.id.game_tv_score);
         tvBestScore =findViewById(R.id.game_tv_best);
+        findViewById(R.id.game_btn_undo).setOnClickListener(this::undoClick);
+        findViewById(R.id.game_btn_new).setOnClickListener(this::newClick);
         LinearLayout gameField = findViewById(R.id.game_layout_field);
         gameField.post(()->{
             int vw = this.getWindow().getDecorView().getWidth();
@@ -88,24 +100,12 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onSwipeLeft() {
-                if(moveLeft()){
-                    spawnTile();
-                    updateField();
-                }
-                else{
-                    Toast.makeText(GameActivity.this, "NO left move", Toast.LENGTH_SHORT).show();
-                }
+                tryMakeMove(MoveDirection.left);
             }
 
             @Override
             public void onSwipeRight() {
-                if(moveRight()){
-                    spawnTile();
-                    updateField();
-                }
-                else{
-                    Toast.makeText(GameActivity.this, "NO right move", Toast.LENGTH_SHORT).show();
-                }
+                tryMakeMove(MoveDirection.right);
             }
 
             @Override
@@ -114,8 +114,100 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-        bestScore = 10L;
+        bestScore = 0L;
+        loadBestScore();
         startNewGame();
+    }
+
+
+    private void tryMakeMove(MoveDirection moveDirection){
+        boolean canMove = false;
+        switch(moveDirection){
+            case bottom:
+                break;
+            case left:
+                canMove = canMoveLeft(); break;
+            case right:
+                canMove = canMoveRight(); break;
+            case top:
+                break;
+        }
+        if(canMove){
+            saveField();
+            switch(moveDirection){
+                case bottom:
+                    break;
+                case left:
+                    moveLeft(); break;
+                case right:
+                    moveRight(); break;
+                case top:
+                    break;
+            }
+            spawnTile();
+            updateField();
+        }
+        else{
+            Toast.makeText(GameActivity.this, "NO move", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void saveField(){
+        savedState = new SavedState(score, bestScore, new int[N][N]);
+        for (int i = 0; i < N; i++) {
+            System.arraycopy(tiles[i], 0, savedState.tiles[i], 0, N);
+        }
+    }
+
+    private void newClick(View view){
+        new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setMessage("Начать новую игру")
+                .setPositiveButton("Начать", (dlg, btn)-> {
+                    startNewGame();
+                })
+                .setNegativeButton("Отмена",(dlg, btn)-> finish() )
+                .setCancelable(false)
+                .show();
+    }
+
+    private void undoClick(View view){
+        if(savedState != null){
+            score = savedState.score;
+            bestScore = savedState.bestScore;
+            for (int i = 0; i < N; i++) {
+                System.arraycopy(tiles[i], 0, savedState.tiles[i], 0, N);
+            }
+            savedState = null;
+            updateField();
+        }
+        else{
+            new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.game_tv_title).setMessage("Множинні збереження доступні за підпискою").setNeutralButton("Закрити", (dlg, btn)->{}).setPositiveButton("Підписка", (dlg, btn) -> {
+                Toast.makeText(this, "Скоро буде реалізовано", Toast.LENGTH_SHORT).show();
+            }).setNegativeButton("Вихід", (dlg,btn) -> finish()).setCancelable(false).show();
+        }
+    }
+
+    private void saveBestScore(){
+        try(FileOutputStream fos = openFileOutput(bestScoreFilename, Context.MODE_PRIVATE)) {
+            DataOutputStream writer = new DataOutputStream(fos);
+            writer.writeLong(bestScore);
+            writer.flush();
+        }
+        catch(IOException ex){
+            Log.w("GameActivity::saveBestScore", ex.getMessage() + " ");
+        }
+    }
+
+    private void loadBestScore(){
+        try(FileInputStream fis = openFileInput(bestScoreFilename);
+            DataInputStream reader = new DataInputStream(fis)){
+            bestScore = reader.readLong();
+        }
+        catch(IOException ex){
+            Log.w("GameActivity::loadBestScore", ex.getMessage() + " ");
+        }
     }
 
     private void startNewGame(){
@@ -131,7 +223,31 @@ public class GameActivity extends AppCompatActivity {
         updateField();
     }
 
-    private boolean moveRight(){
+    private boolean canMoveLeft(){
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if(tiles[i][j] != 0 && tiles[i][j+1] == tiles[i][j] ||
+                   tiles[i][j] == 0 && tiles[i][j + 1] != 0){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canMoveRight(){
+        for (int i = 0; i < N; i++) {
+            for (int j = 1; j < N; j++) {
+                if(tiles[i][j] != 0 && tiles[i][j - 1] == tiles[i][j] ||
+                        tiles[i][j] == 0 && tiles[i][j - 1] != 0){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void moveRight(){
         boolean res;
         res = shiftRight(false);
         for (int i = 0; i < N; i++) {
@@ -148,9 +264,8 @@ public class GameActivity extends AppCompatActivity {
         if(res){
             shiftRight(true);
         }
-        return res;
     }
-    private boolean moveLeft(){
+    private void moveLeft(){
         boolean res;
         res = shiftLeft(false);
         for (int i = 0; i < N; i++) {
@@ -167,7 +282,6 @@ public class GameActivity extends AppCompatActivity {
         if(res){
             shiftLeft(true);
         }
-        return res;
     }
     private boolean shiftRight(Boolean shiftTags){
         boolean res = false;
@@ -251,6 +365,7 @@ public class GameActivity extends AppCompatActivity {
         if (score > bestScore) {
             bestScore = score;
             tvBestScore.setTag(bestScoreAnimation);
+            saveBestScore();
         }
 
         for (int i = 0; i < N; i++) {
@@ -293,9 +408,29 @@ public class GameActivity extends AppCompatActivity {
 
             }
         }
+
     }
 
     private String scoreToString(long value){
         return String.valueOf(value);
+    }
+
+
+    private static class SavedState{
+        private final int[][] tiles;
+        private final long score;
+        private final long bestScore;
+        private SavedState(long score, long bestScore, int[][] tiles){
+            this.bestScore = bestScore;
+            this.score = score;
+            this.tiles = tiles;
+        }
+    }
+
+    private enum MoveDirection{
+        bottom,
+        left,
+        right,
+        top
     }
 }
