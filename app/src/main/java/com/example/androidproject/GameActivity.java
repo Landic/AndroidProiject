@@ -95,7 +95,7 @@ public class GameActivity extends AppCompatActivity {
         gameField.setOnTouchListener(new OnSwipeListener(GameActivity.this){
             @Override
             public void onSwipeBottom() {
-                Toast.makeText(GameActivity.this, "onSwipeBottom", Toast.LENGTH_SHORT).show();
+                tryMakeMove(MoveDirection.bottom);
             }
 
             @Override
@@ -110,7 +110,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onSwipeTop() {
-                Toast.makeText(GameActivity.this, "onSwipeTop", Toast.LENGTH_SHORT).show();
+                tryMakeMove(MoveDirection.top);
             }
         });
 
@@ -120,37 +120,48 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
-    private void tryMakeMove(MoveDirection moveDirection){
+
+
+
+    private void tryMakeMove(MoveDirection moveDirection) {
         boolean canMove = false;
-        switch(moveDirection){
+        switch (moveDirection) {
             case bottom:
+                canMove = canMoveDown();
                 break;
             case left:
-                canMove = canMoveLeft(); break;
+                canMove = canMoveLeft();
+                break;
             case right:
-                canMove = canMoveRight(); break;
+                canMove = canMoveRight();
+                break;
             case top:
+                canMove = canMoveUp();
                 break;
         }
-        if(canMove){
+        if (canMove) {
             saveField();
-            switch(moveDirection){
+            switch (moveDirection) {
                 case bottom:
+                    moveDown();
                     break;
                 case left:
-                    moveLeft(); break;
+                    moveLeft();
+                    break;
                 case right:
-                    moveRight(); break;
+                    moveRight();
+                    break;
                 case top:
+                    moveUp();
                     break;
             }
             spawnTile();
             updateField();
-        }
-        else{
+        } else {
             Toast.makeText(GameActivity.this, "NO move", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     private void saveField(){
@@ -172,20 +183,27 @@ public class GameActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void undoClick(View view){
-        if(savedState != null){
+    private void undoClick(View view) {
+        if (savedState != null) {
             score = savedState.score;
             bestScore = savedState.bestScore;
             for (int i = 0; i < N; i++) {
-                System.arraycopy(tiles[i], 0, savedState.tiles[i], 0, N);
+                System.arraycopy(savedState.tiles[i], 0, tiles[i], 0, N);
             }
             savedState = null;
             updateField();
-        }
-        else{
-            new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.game_tv_title).setMessage("Множинні збереження доступні за підпискою").setNeutralButton("Закрити", (dlg, btn)->{}).setPositiveButton("Підписка", (dlg, btn) -> {
-                Toast.makeText(this, "Скоро буде реалізовано", Toast.LENGTH_SHORT).show();
-            }).setNegativeButton("Вихід", (dlg,btn) -> finish()).setCancelable(false).show();
+        } else {
+            new AlertDialog
+                    .Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.game_tv_title)
+                    .setMessage("Множественные сохранения доступны по подписке")
+                    .setNeutralButton("Закрыть", (dlg, btn) -> {
+                    })
+                    .setPositiveButton("Подписка", (dlg, btn) -> Toast.makeText(this, "Скоро будет реализовано", Toast.LENGTH_SHORT).show())
+                    .setNegativeButton("Выход", (dlg, btn) -> finish())
+                    .setCancelable(false)
+                    .show();
         }
     }
 
@@ -246,6 +264,73 @@ public class GameActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    private boolean canMoveUp() {
+        for (int j = 0; j < N; j++) {
+            for (int i = 0; i < N - 1; i++) {
+                if (tiles[i][j] == 0 && tiles[i + 1][j] != 0 ||
+                        tiles[i][j] != 0 && tiles[i][j] == tiles[i + 1][j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canMoveDown() {
+        for (int j = 0; j < N; j++) {
+            for (int i = N - 1; i > 0; i--) {
+                if (tiles[i][j] == 0 && tiles[i - 1][j] != 0 ||
+                        tiles[i][j] != 0 && tiles[i][j] == tiles[i - 1][j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+    private void moveUp() {
+        boolean res = shiftUp(false);
+        for (int j = 0; j < N; j++) {
+            for (int i = 0; i < N - 1; i++) {
+                if (tiles[i][j] == tiles[i + 1][j] && tiles[i][j] != 0) {
+                    tiles[i][j] *= 2;
+                    tiles[i + 1][j] = 0;
+                    score += tiles[i][j];
+                    res = true;
+                    tvTiles[i][j].setTag(collapseAnimation);
+                }
+            }
+        }
+        if (res) {
+            shiftUp(true);
+        }
+    }
+
+    private void moveDown() {
+        Log.d("MOVE", "moveDown() called");
+        boolean res = shiftDown(false);
+        for (int j = 0; j < N; j++) {
+            for (int i = N - 1; i > 0; i--) {
+                if (tiles[i][j] == tiles[i - 1][j] && tiles[i][j] != 0) {
+                    Log.d("MOVE", "Merging tiles at [" + i + "][" + j + "] and [" + (i - 1) + "][" + j + "]");
+                    tiles[i][j] *= 2;
+                    tiles[i - 1][j] = 0;
+                    score += tiles[i][j];
+                    res = true;
+                    tvTiles[i][j].setTag(collapseAnimation);
+                }
+            }
+        }
+        if (res) {
+            Log.d("MOVE", "ShiftDown after merge");
+            shiftDown(true);
+        }
+    }
+
+
 
     private void moveRight(){
         boolean res;
@@ -329,6 +414,56 @@ public class GameActivity extends AppCompatActivity {
         }
         return res;
     }
+
+    private boolean shiftUp(Boolean shiftTags) {
+        boolean res = false;
+        for (int j = 0; j < N; j++) {
+            boolean wasReplace;
+            do {
+                wasReplace = false;
+                for (int i = 1; i < N; i++) {
+                    if (tiles[i][j] != 0 && tiles[i - 1][j] == 0) {
+                        tiles[i - 1][j] = tiles[i][j];
+                        tiles[i][j] = 0;
+                        wasReplace = true;
+                        res = true;
+                        if (shiftTags) {
+                            Object tag = tvTiles[i][j].getTag();
+                            tvTiles[i][j].setTag(tvTiles[i - 1][j].getTag());
+                            tvTiles[i - 1][j].setTag(tag);
+                        }
+                    }
+                }
+            } while (wasReplace);
+        }
+        return res;
+    }
+
+    private boolean shiftDown(Boolean shiftTags) {
+        boolean res = false;
+        for (int j = 0; j < N; j++) {
+            boolean wasReplace;
+            do {
+                wasReplace = false;
+                for (int i = N - 2; i >= 0; i--) {
+                    if (tiles[i][j] != 0 && tiles[i + 1][j] == 0) {
+                        tiles[i + 1][j] = tiles[i][j];
+                        tiles[i][j] = 0;
+                        wasReplace = true;
+                        res = true;
+                        if (shiftTags) {
+                            Object tag = tvTiles[i][j].getTag();
+                            tvTiles[i][j].setTag(tvTiles[i + 1][j].getTag());
+                            tvTiles[i + 1][j].setTag(tag);
+                        }
+                    }
+                }
+            } while (wasReplace);
+        }
+        return res;
+    }
+
+
 
     private boolean spawnTile(){
         boolean res = false;
