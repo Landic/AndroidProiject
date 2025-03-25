@@ -57,11 +57,23 @@
     <!--    endregion-->
 
 
-
     <string name="rate_load_fail">Произошла ошибка загрузки</string>
     <string name="rate_sv_description">Все курсы валют</string>
+    <string name="rate_btn_close_description">Закрыть окно</string>
 
     <string name="rate_info">
     Полное название: %1$s\nСокращённое название: %2$s\nКод r030: %3$d\nКурс на %4$s: 1 %2$s = %5$.4f HRN
     </string>
+    <string name="rate_field_choose_date">Выберите дату</string>
+    <string name="rate_field_search">Поиск по названию или коду</string>
+
+
+    <string name="main_btn_chat">Чат</string>
+    <string name="chat_tv_author">Автор</string>
+    <string name="chat_tv_message">Текст:</string>
+    <string name="chat_tv_message_hint">Сообщение в чат</string>
+    <string name="chat_iv_bell_description">Новое уведомление</string>
+    <string name="chat_msg_empty_author">Введите своё имя</string>
+    <string name="chat_msg_empty_message">Введите сообщение</string>
+
 </resources>

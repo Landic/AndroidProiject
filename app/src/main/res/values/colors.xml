@@ -34,4 +34,6 @@
     <color name="game_tile32_fg">#F5F5ED</color>
     <color name="game_tile64_bg">#F15E46</color>
     <color name="game_tile64_fg">#F6F5EE</color>
+
+
 </resources>

@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById( R.id.main_btn_game).setOnClickListener(this::onButtonGame);
         findViewById( R.id.main_btn_anim).setOnClickListener(this::onButtonAnim);
         findViewById( R.id.main_btn_rate).setOnClickListener(this::onButtonRate);
+        findViewById(R.id.main_btn_chat).setOnClickListener(this::onButtonChat);
     }
 
     private void onButtonCalc(View view){
@@ -30,4 +31,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, RateActivity.class));
     }
 
+    private void onButtonChat(View view) {
+        startActivity(new Intent(MainActivity.this, ChatActivity.class));
+    }
 }
